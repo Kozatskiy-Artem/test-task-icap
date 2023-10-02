@@ -11,6 +11,24 @@ Or
 git clone https://github.com/Kozatskiy-Artem/test-task-icap.git
 ```
 
+Create a `.env` file in the root of the project, with keys as in the `.env_example` file
+
+Or
+
+Use the following command:
+
+For Windows:
+```
+copy .env_example .env
+```
+
+For UNIX:
+```
+cp .env_example .env
+```
+
+And fill in your own values
+
 If you haven't previously created a project with a virtual environment, for example, in PyCharm, you can do it using the following commands:
 
 To create a virtual environment, execute the command:
@@ -34,7 +52,12 @@ Install the necessary dependencies:
 pip install -r requirements.txt
 ```
 
-Apply migrations:
+Create:
+```
+python manage.py makemigrations
+```
+
+And apply migrations:
 ```
 python manage.py migrate
 ```
