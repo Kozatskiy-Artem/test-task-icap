@@ -4,7 +4,7 @@ from annoying.functions import get_object_or_None
 from django.db.models import QuerySet, Q
 
 from core.exceptions import InstanceDoesNotExistError
-from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO, GetProductDTO
 from .models import Product
 from .interfaces import ProductRepositoryInterface
 
@@ -38,7 +38,7 @@ class ProductRepository(ProductRepositoryInterface):
 
         return self._product_to_dto(product)
 
-    def get_product_by_id(self, product_id: int) -> ProductDTO:
+    def get_product_by_id(self, product_id: int) -> GetProductDTO:
         """
         Retrieve information about a product using its unique identifier.
 
@@ -46,7 +46,7 @@ class ProductRepository(ProductRepositoryInterface):
             product_id (int): The unique identifier of the product.
 
         Returns:
-            ProductDTO - A data transfer object containing the product information.
+            GetProductDTO - A data transfer object containing the product information.
 
         Raises:
             InstanceDoesNotExistError: If no product with this id is found.
@@ -54,7 +54,7 @@ class ProductRepository(ProductRepositoryInterface):
 
         product = get_object_or_None(Product, id=product_id)
         if product:
-            return self._product_to_dto(product)
+            return self._product_to_get_dto(product)
         raise InstanceDoesNotExistError(f"Product with id {product_id} not found")
 
     def partial_update_product(self, product_id: int, partial_product_dto: PartialProductDTO) -> ProductDTO:
@@ -182,3 +182,27 @@ class ProductRepository(ProductRepositoryInterface):
         products_dto = [cls._product_to_dto(product) for product in products]
 
         return products_dto
+
+    @staticmethod
+    def _product_to_get_dto(product: Product) -> GetProductDTO:
+        """
+        Convert a data model object (Product) into a GetProductDTO object.
+
+        Args:
+            product (Product): An instance of the Product model class.
+
+        Returns:
+            GetProductDTO - A data transfer object containing the product information.
+        """
+
+        return GetProductDTO(
+            id=product.pk,
+            name=product.name,
+            photo=product.photo,
+            category=product.category,
+            offer_of_the_month=product.offer_of_the_month,
+            availability=product.availability,
+            self_pickup=product.self_pickup,
+            description=product.description,
+            price=product.price,
+        )

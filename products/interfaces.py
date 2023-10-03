@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO, GetProductDTO
 
 
 class ProductRepositoryInterface(metaclass=ABCMeta):
@@ -32,7 +32,7 @@ class ProductRepositoryInterface(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_product_by_id(self, product_id: int) -> ProductDTO:
+    def get_product_by_id(self, product_id: int) -> GetProductDTO:
         """
         Retrieve information about a product using its unique identifier.
 
@@ -40,7 +40,7 @@ class ProductRepositoryInterface(metaclass=ABCMeta):
             product_id (int): The unique identifier of the product.
 
         Returns:
-            ProductDTO - A data transfer object containing the product information.
+            GetProductDTO - A data transfer object containing the product information.
 
         Raises:
             InstanceDoesNotExistError: If no product with this id is found.

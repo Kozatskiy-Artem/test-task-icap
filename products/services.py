@@ -1,4 +1,4 @@
-from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO, GetProductDTO
 from .interfaces import ProductRepositoryInterface
 
 
@@ -25,7 +25,7 @@ class ProductService:
 
         return self.product_repository.create_product(new_product_dto)
 
-    def get_product(self, product_id: int) -> ProductDTO:
+    def get_product(self, product_id: int) -> GetProductDTO:
         """
         Retrieve information about a product using its unique identifier.
 
@@ -33,7 +33,7 @@ class ProductService:
             product_id (int): The unique identifier of the product.
 
         Returns:
-            ProductDTO: A data transfer object containing the product information.
+            GetProductDTO: A data transfer object containing the product information.
 
         Raises:
             InstanceDoesNotExistError: If no product with this id is found.
