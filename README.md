@@ -29,6 +29,32 @@ cp .env_example .env
 
 And fill in your own values
 
+### With Docker
+
+Make sure you have Docker and Docker Compose installed on your system.
+
+### Build and run the Docker containers:
+```
+docker-compose up -d --build
+```
+
+#### Open your web browser and navigate to http://localhost:8000/.
+
+### For login as superuser you can use username = admin and password = admin
+
+### Shutdown
+```
+docker-compose down
+```
+or
+```
+docker-compose down -v
+```
+if you want to delete containers with docker volume
+
+
+### Without docker
+
 If you haven't previously created a project with a virtual environment, for example, in PyCharm, you can do it using the following commands:
 
 To create a virtual environment, execute the command:
