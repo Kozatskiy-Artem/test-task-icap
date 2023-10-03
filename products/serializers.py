@@ -36,3 +36,15 @@ class PartialProductSerializer(serializers.Serializer):
     description1 = serializers.CharField(max_length=500, required=False, allow_blank=True, allow_null=True)
     description2 = serializers.CharField(max_length=500, required=False, allow_blank=True, allow_null=True)
     price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+
+
+class GetProductSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    photo = serializers.URLField()
+    category = serializers.CharField()
+    offer_of_the_month = serializers.BooleanField()
+    availability = serializers.BooleanField()
+    self_pickup = serializers.BooleanField()
+    description = serializers.CharField()
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)

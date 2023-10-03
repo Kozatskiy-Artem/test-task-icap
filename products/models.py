@@ -21,4 +21,4 @@ class Product(models.Model):
     def description(self):
         """A property that combines two description fields"""
 
-        return f"{self.description1}\n{self.description2}"
+        return f"{self.description1} <br/> {self.description2}"

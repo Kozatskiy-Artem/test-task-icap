@@ -47,3 +47,16 @@ class QueryParamsDTO:
     offer_of_the_month: Optional[bool] = None
     availability: Optional[bool] = None
     self_pickup: Optional[bool] = None
+
+
+@dataclass(frozen=True)
+class GetProductDTO:
+    id: int
+    name: str
+    photo: str
+    category: str
+    offer_of_the_month: bool
+    availability: bool
+    self_pickup: bool
+    description: str
+    price: float

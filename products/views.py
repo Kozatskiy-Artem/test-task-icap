@@ -9,7 +9,7 @@ from core.permissions import JWTPermissionValidator
 from core.exceptions import InstanceDoesNotExistError
 from core.responses import ResponseWithErrorSerializer, ValidationErrorResponseSerializer, AccessDeniedDetailSerializer
 from .dto import NewProductDTO, PartialProductDTO, QueryParamsDTO
-from .serializers import ProductCreateSerializer, ProductSerializer, PartialProductSerializer
+from .serializers import ProductCreateSerializer, ProductSerializer, PartialProductSerializer, GetProductSerializer
 
 
 class ApiProductListView(APIView):
@@ -109,7 +109,7 @@ class ApiProductDetailView(APIView):
     @extend_schema(
         summary="Retrieve product data by product id",
         responses={
-            200: ProductSerializer,
+            200: GetProductSerializer,
             404: ResponseWithErrorSerializer,
         },
         tags=["Products"],
@@ -124,7 +124,7 @@ class ApiProductDetailView(APIView):
         except InstanceDoesNotExistError as exception:
             return Response({"error": str(exception.message)}, status=status.HTTP_404_NOT_FOUND)
 
-        product = ProductSerializer(product_dto)
+        product = GetProductSerializer(product_dto)
 
         return Response(
             data=product.data,
