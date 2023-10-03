@@ -59,6 +59,22 @@ class ApiProductDetailView(APIView):
             status=status.HTTP_200_OK,
         )
 
+    def delete(self, request, id):
+        """Handle DELETE request to remove product data."""
+
+        JWTPermissionValidator.is_superuser_or_raise(request)
+
+        product_service = ServiceContainer.product_service()
+
+        try:
+            product_service.delete_product(id)
+        except InstanceDoesNotExistError as exception:
+            return Response({"error": str(exception.message)}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT,
+        )
+
     def patch(self, request, id):
         """Handle PATCH request to partial update product data."""
 
