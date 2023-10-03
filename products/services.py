@@ -24,3 +24,19 @@ class ProductService:
         """
 
         return self.product_repository.create_product(new_product_dto)
+
+    def get_product(self, product_id: int) -> ProductDTO:
+        """
+        Retrieve information about a product using its unique identifier.
+
+        Args:
+            product_id (int): The unique identifier of the product.
+
+        Returns:
+            ProductDTO: A data transfer object containing the product information.
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+
+        return self.product_repository.get_product_by_id(product_id)
