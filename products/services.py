@@ -1,4 +1,4 @@
-from .dto import NewProductDTO, ProductDTO, PartialProductDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO
 from .interfaces import ProductRepositoryInterface
 
 
@@ -73,3 +73,19 @@ class ProductService:
         """
 
         self.product_repository.delete_product_by_id(product_id)
+
+    def get_products(self, query_params_dto: QueryParamsDTO) -> list[ProductDTO]:
+        """
+        Retrieve a list of products filtered by the provided parameters.
+
+        Args:
+            query_params_dto (QueryParamsDTO): A data transfer object containing filter parameters.
+
+        Returns:
+            list(ProductDTO) - A list of data transfer objects containing information about products.
+
+        Raises:
+            InstanceDoesNotExistError: If no products is found.
+        """
+
+        return self.product_repository.get_products(query_params_dto)
