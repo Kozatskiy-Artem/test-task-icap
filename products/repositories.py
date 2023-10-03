@@ -1,3 +1,6 @@
+from annoying.functions import get_object_or_None
+
+from core.exceptions import InstanceDoesNotExistError
 from .dto import NewProductDTO, ProductDTO
 from .models import Product
 from .interfaces import ProductRepositoryInterface
@@ -31,6 +34,25 @@ class ProductRepository(ProductRepositoryInterface):
         )
 
         return self._product_to_dto(product)
+
+    def get_product_by_id(self, product_id: int) -> ProductDTO:
+        """
+        Retrieve information about a product using its unique identifier.
+
+        Args:
+            product_id (int): The unique identifier of the product.
+
+        Returns:
+            ProductDTO: A data transfer object containing the product information.
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+
+        product = get_object_or_None(Product, id=product_id)
+        if product:
+            return self._product_to_dto(product)
+        raise InstanceDoesNotExistError(f"Product with id {product_id} not found")
 
     @staticmethod
     def _product_to_dto(product: Product) -> ProductDTO:

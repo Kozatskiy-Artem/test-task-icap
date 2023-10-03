@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework.exceptions import APIException
 
 
@@ -15,3 +16,8 @@ class ForbiddenException(APIException):
     status_code = 403
     default_detail = "Access Denied"
     default_code = "access_denied"
+
+
+class InstanceDoesNotExistError(ValidationError):
+    def __init__(self, message="Instance does not exists", *args, **kwargs):
+        super().__init__(message, *args, **kwargs)

@@ -30,3 +30,19 @@ class ProductRepositoryInterface(metaclass=ABCMeta):
 
         """
         pass
+
+    @abstractmethod
+    def get_product_by_id(self, product_id: int) -> ProductDTO:
+        """
+        Retrieve information about a product using its unique identifier.
+
+        Args:
+            product_id (int): The unique identifier of the product.
+
+        Returns:
+            ProductDTO: A data transfer object containing the product information.
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+        pass
