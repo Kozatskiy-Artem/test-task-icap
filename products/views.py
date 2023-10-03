@@ -1,10 +1,13 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.types import OpenApiTypes
 
 from core.containers import ServiceContainer
 from core.permissions import JWTPermissionValidator
 from core.exceptions import InstanceDoesNotExistError
+from core.responses import ResponseWithErrorSerializer, ValidationErrorResponseSerializer, AccessDeniedDetailSerializer
 from .dto import NewProductDTO, PartialProductDTO, QueryParamsDTO
 from .serializers import ProductCreateSerializer, ProductSerializer, PartialProductSerializer
 
@@ -15,6 +18,16 @@ class ApiProductListView(APIView):
     working with a list containing information about products.
     """
 
+    @extend_schema(
+        summary="Create a new product",
+        request=ProductCreateSerializer,
+        responses={
+            200: ProductSerializer,
+            401: AccessDeniedDetailSerializer,
+            403: AccessDeniedDetailSerializer,
+        },
+        tags=["Products"],
+    )
     def post(self, request):
         """Handle POST request to create product."""
 
@@ -38,6 +51,34 @@ class ApiProductListView(APIView):
             status=status.HTTP_201_CREATED,
         )
 
+    @extend_schema(
+        summary="Retrieve information about all products by query params",
+        responses={
+            200: ProductSerializer(many=True),
+            404: ResponseWithErrorSerializer,
+        },
+        parameters=[
+            OpenApiParameter(
+                name="is_offer_of_the_month",
+                type=OpenApiTypes.BOOL,
+                location=OpenApiParameter.QUERY,
+                description="Filter products by 'offer of the month' status (True/False).",
+            ),
+            OpenApiParameter(
+                name="is_available",
+                type=OpenApiTypes.BOOL,
+                location=OpenApiParameter.QUERY,
+                description="Filter products by availability status (True/False).",
+            ),
+            OpenApiParameter(
+                name="is_self_pickup",
+                type=OpenApiTypes.BOOL,
+                location=OpenApiParameter.QUERY,
+                description="Filter products by 'self pickup' status (True/False).",
+            ),
+        ],
+        tags=["Products"],
+    )
     def get(self, request):
         """Handle GET request to retrieve all products data."""
 
@@ -65,6 +106,14 @@ class ApiProductListView(APIView):
 class ApiProductDetailView(APIView):
     """The ApiProductDetailView class defines API endpoints for working with pet information."""
 
+    @extend_schema(
+        summary="Retrieve product data by product id",
+        responses={
+            200: ProductSerializer,
+            404: ResponseWithErrorSerializer,
+        },
+        tags=["Products"],
+    )
     def get(self, request, id):
         """Handle GET request to retrieve product data."""
 
@@ -82,6 +131,14 @@ class ApiProductDetailView(APIView):
             status=status.HTTP_200_OK,
         )
 
+    @extend_schema(
+        summary="Delete product data by product id",
+        responses={
+            204: None,
+            404: ResponseWithErrorSerializer,
+        },
+        tags=["Products"],
+    )
     def delete(self, request, id):
         """Handle DELETE request to remove product data."""
 
@@ -98,6 +155,18 @@ class ApiProductDetailView(APIView):
             status=status.HTTP_204_NO_CONTENT,
         )
 
+    @extend_schema(
+        summary="Partial update product  data",
+        request=PartialProductSerializer,
+        responses={
+            200: ProductSerializer,
+            400: ValidationErrorResponseSerializer,
+            401: AccessDeniedDetailSerializer,
+            403: AccessDeniedDetailSerializer,
+            404: ResponseWithErrorSerializer,
+        },
+        tags=["Products"],
+    )
     def patch(self, request, id):
         """Handle PATCH request to partial update product data."""
 
