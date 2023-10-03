@@ -1,7 +1,9 @@
+from dataclasses import fields as dc_fields
+
 from annoying.functions import get_object_or_None
 
 from core.exceptions import InstanceDoesNotExistError
-from .dto import NewProductDTO, ProductDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO
 from .models import Product
 from .interfaces import ProductRepositoryInterface
 
@@ -53,6 +55,39 @@ class ProductRepository(ProductRepositoryInterface):
         if product:
             return self._product_to_dto(product)
         raise InstanceDoesNotExistError(f"Product with id {product_id} not found")
+
+    def partial_update_product(self, product_id: int, partial_product_dto: PartialProductDTO) -> ProductDTO:
+        """
+        Partial update product
+
+        Args:
+            product_id (int): The unique identifier of the product.
+            partial_product_dto (PartialProductDTO): The data model object representing partial data of a product.
+
+        Returns:
+            ProductDTO: A data transfer object containing the product information.
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+
+        product = get_object_or_None(Product, id=product_id)
+
+        if not product:
+            raise InstanceDoesNotExistError(f"Product with id {product_id} not found")
+
+        update_fields = {
+            field.name: getattr(partial_product_dto, field.name)
+            for field in dc_fields(PartialProductDTO)
+            if not getattr(partial_product_dto, field.name) is None
+        }
+
+        for key, value in update_fields.items():
+            setattr(product, key, value)
+
+        product.save()
+
+        return self._product_to_dto(product)
 
     @staticmethod
     def _product_to_dto(product: Product) -> ProductDTO:

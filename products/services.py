@@ -1,4 +1,4 @@
-from .dto import NewProductDTO, ProductDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO
 from .interfaces import ProductRepositoryInterface
 
 
@@ -40,3 +40,20 @@ class ProductService:
         """
 
         return self.product_repository.get_product_by_id(product_id)
+
+    def partial_update_product(self, product_id: int, partial_product_dto: PartialProductDTO) -> ProductDTO:
+        """
+        Partial update product
+
+        Args:
+            product_id (int): The unique identifier of the product.
+            partial_product_dto (PartialProductDTO): The data model object representing partial data of a product.
+
+        Returns:
+            ProductDTO: A data transfer object containing the product information.
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+
+        return self.product_repository.partial_update_product(product_id, partial_product_dto)

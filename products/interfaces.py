@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from .dto import NewProductDTO, ProductDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO
 
 
 class ProductRepositoryInterface(metaclass=ABCMeta):
@@ -38,6 +38,23 @@ class ProductRepositoryInterface(metaclass=ABCMeta):
 
         Args:
             product_id (int): The unique identifier of the product.
+
+        Returns:
+            ProductDTO: A data transfer object containing the product information.
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+        pass
+
+    @abstractmethod
+    def partial_update_product(self, product_id: int, partial_product_dto: PartialProductDTO) -> ProductDTO:
+        """
+        Partial update product
+
+        Args:
+            product_id (int): The unique identifier of the product.
+            partial_product_dto (PartialProductDTO): The data model object representing partial data of a product.
 
         Returns:
             ProductDTO: A data transfer object containing the product information.
