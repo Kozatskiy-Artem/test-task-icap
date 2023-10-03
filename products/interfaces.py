@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from .dto import NewProductDTO, ProductDTO, PartialProductDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO
 
 
 class ProductRepositoryInterface(metaclass=ABCMeta):
@@ -77,5 +77,21 @@ class ProductRepositoryInterface(metaclass=ABCMeta):
 
         Raises:
             InstanceDoesNotExistError: If no product with this id is found.
+        """
+        pass
+
+    @abstractmethod
+    def get_products(self, query_params_dto: QueryParamsDTO) -> list[ProductDTO]:
+        """
+        Retrieve a list of products filtered by the provided parameters.
+
+        Args:
+            query_params_dto (QueryParamsDTO): A data transfer object containing filter parameters.
+
+        Returns:
+            list(ProductDTO) - A list of data transfer objects containing information about products.
+
+        Raises:
+            InstanceDoesNotExistError: If no products is found.
         """
         pass

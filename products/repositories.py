@@ -1,9 +1,10 @@
 from dataclasses import fields as dc_fields
 
 from annoying.functions import get_object_or_None
+from django.db.models import QuerySet, Q
 
 from core.exceptions import InstanceDoesNotExistError
-from .dto import NewProductDTO, ProductDTO, PartialProductDTO
+from .dto import NewProductDTO, ProductDTO, PartialProductDTO, QueryParamsDTO
 from .models import Product
 from .interfaces import ProductRepositoryInterface
 
@@ -109,6 +110,38 @@ class ProductRepository(ProductRepositoryInterface):
 
         product.delete()
 
+    def get_products(self, query_params_dto: QueryParamsDTO) -> list[ProductDTO]:
+        """
+        Retrieve a list of products filtered by the provided parameters.
+
+        Args:
+            query_params_dto (QueryParamsDTO): A data transfer object containing filter parameters.
+
+        Returns:
+            list(ProductDTO) - A list of data transfer objects containing information about products.
+
+        Raises:
+            InstanceDoesNotExistError: If no products is found.
+        """
+
+        filter_conditions = Q()
+
+        if query_params_dto.offer_of_the_month is not None:
+            filter_conditions &= Q(offer_of_the_month=query_params_dto.offer_of_the_month)
+
+        if query_params_dto.availability is not None:
+            filter_conditions &= Q(availability=query_params_dto.availability)
+
+        if query_params_dto.self_pickup is not None:
+            filter_conditions &= Q(self_pickup=query_params_dto.self_pickup)
+
+        products = Product.objects.filter(filter_conditions)
+
+        if not products.exists():
+            raise InstanceDoesNotExistError("Products not found")
+
+        return self._products_to_dto(products)
+
     @staticmethod
     def _product_to_dto(product: Product) -> ProductDTO:
         """
@@ -133,3 +166,19 @@ class ProductRepository(ProductRepositoryInterface):
             description2=product.description2,
             price=product.price,
         )
+
+    @classmethod
+    def _products_to_dto(cls, products: QuerySet[Product]) -> list[ProductDTO]:
+        """
+        Converts a QuerySet of Product objects to a list of ProductDTO objects.
+
+        Args:
+            products (QuerySet[Product]): A QuerySet of Product objects to be converted.
+
+        Returns:
+            list[ProductDTO]: A list of ProductDTO objects containing the converted data.
+        """
+
+        products_dto = [cls._product_to_dto(product) for product in products]
+
+        return products_dto

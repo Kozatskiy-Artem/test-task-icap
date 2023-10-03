@@ -40,3 +40,10 @@ class PartialProductDTO:
     description1: Optional[str] = None
     description2: Optional[str] = None
     price: Optional[float] = None
+
+
+@dataclass(frozen=True)
+class QueryParamsDTO:
+    offer_of_the_month: Optional[bool] = None
+    availability: Optional[bool] = None
+    self_pickup: Optional[bool] = None

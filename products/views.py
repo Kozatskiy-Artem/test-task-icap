@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from core.containers import ServiceContainer
 from core.permissions import JWTPermissionValidator
 from core.exceptions import InstanceDoesNotExistError
-from .dto import NewProductDTO, PartialProductDTO
+from .dto import NewProductDTO, PartialProductDTO, QueryParamsDTO
 from .serializers import ProductCreateSerializer, ProductSerializer, PartialProductSerializer
 
 
@@ -36,6 +36,29 @@ class ApiProductListView(APIView):
         return Response(
             data=product.data,
             status=status.HTTP_201_CREATED,
+        )
+
+    def get(self, request):
+        """Handle GET request to retrieve all products data."""
+
+        query_params_dto = QueryParamsDTO(
+            offer_of_the_month=request.query_params.get('is_offer_of_the_month', None),
+            availability=request.query_params.get('is_available', None),
+            self_pickup=request.query_params.get('is_self_pickup', None)
+        )
+
+        product_service = ServiceContainer.product_service()
+
+        try:
+            products_dto = product_service.get_products(query_params_dto)
+        except InstanceDoesNotExistError as exception:
+            return Response({"error": str(exception.message)}, status=status.HTTP_404_NOT_FOUND)
+
+        products = ProductSerializer(products_dto, many=True)
+
+        return Response(
+            data=products.data,
+            status=status.HTTP_200_OK,
         )
 
 
