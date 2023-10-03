@@ -57,3 +57,19 @@ class ProductService:
         """
 
         return self.product_repository.partial_update_product(product_id, partial_product_dto)
+
+    def delete_product(self, product_id) -> None:
+        """
+        Delete information about a product using its unique identifier.
+
+        Args:
+            product_id (int): The unique identifier of the product.
+
+        Returns:
+            None
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+
+        self.product_repository.delete_product_by_id(product_id)

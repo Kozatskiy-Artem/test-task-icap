@@ -40,7 +40,7 @@ class ProductRepositoryInterface(metaclass=ABCMeta):
             product_id (int): The unique identifier of the product.
 
         Returns:
-            ProductDTO: A data transfer object containing the product information.
+            ProductDTO - A data transfer object containing the product information.
 
         Raises:
             InstanceDoesNotExistError: If no product with this id is found.
@@ -57,7 +57,23 @@ class ProductRepositoryInterface(metaclass=ABCMeta):
             partial_product_dto (PartialProductDTO): The data model object representing partial data of a product.
 
         Returns:
-            ProductDTO: A data transfer object containing the product information.
+            ProductDTO - A data transfer object containing the product information.
+
+        Raises:
+            InstanceDoesNotExistError: If no product with this id is found.
+        """
+        pass
+
+    @abstractmethod
+    def delete_product_by_id(self, product_id: int) -> None:
+        """
+        Delete information about a product using its unique identifier.
+
+        Args:
+            product_id (int): The unique identifier of the product.
+
+        Returns:
+            None
 
         Raises:
             InstanceDoesNotExistError: If no product with this id is found.
